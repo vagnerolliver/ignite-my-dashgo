@@ -7,8 +7,9 @@ export function Header() {
       as="header"
       align="center"
       h="20"
-      mt="4"
       maxWidth={1480}
+      mx="auto"
+      mt="4"
       px="6"
       w="100%"
     >

@@ -3,7 +3,7 @@ import { RiContactsLine, RiDashboardLine, RiGitMergeLine, RiInputMethodLine } fr
 
 export function Aside() {
   return (
-    <Box as="aside" w="64" mr="68">
+    <Box as="aside" w="64" mr="6">
       <Stack spacing="12" align="fle">
         <Box>
           <Text fontWeight="bold" color="gray.400" fontSize="small">Geral</Text>

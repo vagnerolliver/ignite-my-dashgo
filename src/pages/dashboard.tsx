@@ -3,8 +3,6 @@ import dynamic from 'next/dynamic'
 
 import { Header } from "../components/Layout/Header"
 import { Aside } from "../components/Layout/Aside"
-import { m } from "framer-motion"
-
 
 const Chart = dynamic(() => import('react-apexcharts'), {
   ssr: false

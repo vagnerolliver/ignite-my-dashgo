@@ -1,9 +1,9 @@
 import { Box, Button, Checkbox, Flex, Heading, Icon, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react"
 import { RiAddLine, RiPencilLine } from "react-icons/ri"
 
-import { Pagination } from "../../components/Pagination"
-import { Header } from "../../components/Layout/Header"
-import { Aside } from "../../components/Layout/Aside"
+import { Sidebar } from "../../components/Layout/Sidebar/Index"
+import { Pagination } from "../../components/Pagination/Index"
+import { Header } from "../../components/Layout/Header/Index"
 
 export default function UserList() {
   return(
@@ -11,7 +11,7 @@ export default function UserList() {
       <Header />
 
       <Flex w="100%" maxWidth={1480} my="6" mx="auto" px="6">
-        <Aside />
+        <Sidebar />
 
         <Box flex="1"borderRadius={8} bg="gray.800" p="8"> 
           <Flex mb="8" justify="space-between" align="center">

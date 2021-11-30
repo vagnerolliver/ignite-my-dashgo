@@ -1,4 +1,5 @@
-import { createServer, Model } from 'mirage'
+import { createServer, Model, Factory } from 'miragejs'
+import faker from 'faker'
 
 // definir o nome dos campos
 // como se fossem colunas no
@@ -19,6 +20,26 @@ export function makeServer() {
       users: Model.extend<Partial<User>>({})
     },
 
+    // gerar dados em massa
+    factories: {
+      user: Factory.extend({
+        name(i: number) {
+          return `${faker.name.firstName()} ${faker.name.lastName()}`
+        },
+        email() {
+          return faker.internet.email().toLocaleLowerCase()
+        },
+        createdAt() {
+          return faker.date.recent(10)
+        }
+      })
+    },
+
+    // criar os dados assim que o server inicializar
+    seeds(server) {
+      server.createList('user', 200)
+    },
+
     routes() {
       this.namespace = 'api'
       this.timing = 750 // miliseconds, importante pra testar os carregamentos
@@ -29,7 +50,7 @@ export function makeServer() {
       this.post('/users')
 
       this.namespace = ''
-      this.passTrought()
+      this.passthrough()
     }
   })
 

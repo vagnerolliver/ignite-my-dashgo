@@ -8,13 +8,37 @@ import { Sidebar } from "../../components/Layout/Sidebar/Index"
 import { Pagination } from "../../components/Pagination/Index"
 import { Header } from "../../components/Layout/Header/Index"
 
+type Users = {
+  id: string
+  name: string
+  email: string
+  createdAt: string
+}
+
+// react query 
+// stale while revalidate
+// revalidade on focus
+
 export default function UserList() {
   // primeiro parametro é a chave usada no cache
   const { data, isLoading, error } = useQuery('users', async () => {
     const response = await fetch('http://localhost:3001/api/users')
     const data = await response.json()
+
+    const users: Users[] = data.users.map(user =>  {
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        createdAt: new Date(user.createdAt).toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric'
+        })
+      }
+    })
     
-    return data
+    return users
   })
 
   const isWideVersion = useBreakpointValue({
@@ -66,78 +90,35 @@ export default function UserList() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  <Tr>
-                    <Td px={["4", "4", "6"]}>
-                      <Checkbox colorScheme="pink" />
-                    </Td>
+                  { data.map(user => (
+                      <Tr key={user.id}>
+                        <Td px={["4", "4", "6"]}>
+                          <Checkbox colorScheme="pink" />
+                        </Td>
 
-                    <Td px={["4", "4", "6"]}>
-                      <Box>
-                        <Text fontWeight="bold">Vágner Silveira</Text>
-                        <Text fontSize="sm" color="gray.300">vagner.olliver@gmail.com</Text>
-                      </Box>
-                    </Td>
-                    { isWideVersion && (<Td fontSize="sm">19 de Agosto. 2021</Td>) }
-                    <Td width="1">
-                      <Button
-                        as="a"
-                        size="sm"
-                        fontSize="sm"
-                        colorScheme="purple"
-                        leftIcon={<Icon as={RiPencilLine}/>}
-                      >
-                        { isWideVersion ? 'Editar' : '' }
-                      </Button>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Td px={["4", "4", "6"]}>
-                      <Checkbox colorScheme="pink" />
-                    </Td>
+                        <Td px={["4", "4", "6"]}>
+                          <Box>
+                            <Text fontWeight="bold">{user.name}</Text>
+                            <Text fontSize="sm" color="gray.300">{user.email}</Text>
+                          </Box>
+                        </Td>
 
-                    <Td px={["4", "4", "6"]}>
-                      <Box>
-                        <Text fontWeight="bold">Vágner Silveira</Text>
-                        <Text fontSize="sm" color="gray.300">vagner.olliver@gmail.com</Text>
-                      </Box>
-                    </Td>
-                    { isWideVersion && (<Td fontSize="sm">19 de Agosto. 2021</Td>) }
-                    <Td width="1">
-                      <Button
-                        as="a"
-                        size="sm"
-                        fontSize="sm"
-                        colorScheme="purple"
-                        leftIcon={<Icon as={RiPencilLine}/>}
-                      >
-                        { isWideVersion ? 'Editar' : '' }
-                      </Button>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Td px={["4", "4", "6"]}>
-                      <Checkbox colorScheme="pink" />
-                    </Td>
-
-                    <Td px={["4", "4", "6"]}>
-                      <Box>
-                        <Text fontWeight="bold">Vágner Silveira</Text>
-                        <Text fontSize="sm" color="gray.300">vagner.olliver@gmail.com</Text>
-                      </Box>
-                    </Td>
-                    { isWideVersion && (<Td fontSize="sm">19 de Agosto. 2021</Td>) }
-                    <Td width="1">
-                      <Button
-                        as="a"
-                        size="sm"
-                        fontSize="sm"
-                        colorScheme="purple"
-                        leftIcon={<Icon as={RiPencilLine}/>}
-                      >
-                        { isWideVersion ? 'Editar' : '' }
-                      </Button>
-                    </Td>
-                  </Tr>
+                        { isWideVersion && (<Td fontSize="sm">{user.createdAt}</Td>) }
+                        
+                        <Td width="1">
+                          <Button
+                            as="a"
+                            size="sm"
+                            fontSize="sm"
+                            colorScheme="purple"
+                            leftIcon={<Icon as={RiPencilLine}/>}
+                          >
+                            { isWideVersion ? 'Editar' : '' }
+                          </Button>
+                        </Td>
+                      </Tr>
+                    )
+                  )}
                 </Tbody>
               </Table>
 

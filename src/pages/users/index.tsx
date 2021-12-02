@@ -39,6 +39,11 @@ export default function UserList() {
     })
     
     return users
+  }, {
+    // garante por 5 segundos que os dados estao frescos
+    // dado que eu "saio da aplicacao" e volto em 5 segundos o react-query 
+    // nao faz o refetch
+    staleTime: 1000 * 5 // 5 segundos
   })
 
   const isWideVersion = useBreakpointValue({
@@ -73,7 +78,9 @@ export default function UserList() {
           </Flex>
 
           { isLoading ? (
-            <Flex justify="center"></Flex>
+            <Flex justify="center">
+              Carregando...
+            </Flex>
           ) : error ? (
             <Text>Falha ao obter dados do usuários.</Text>
           ) : (

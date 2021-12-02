@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, Flex, Heading, Icon, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue } from "@chakra-ui/react"
+import { Box, Button, Checkbox, Flex, Heading, Icon, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue, Spinner } from "@chakra-ui/react"
 import { RiAddLine, RiPencilLine } from "react-icons/ri"
 import { useEffect } from 'react'
 import Link from "next/link"
@@ -21,7 +21,7 @@ type Users = {
 
 export default function UserList() {
   // primeiro parametro é a chave usada no cache
-  const { data, isLoading, error } = useQuery('users', async () => {
+  const { data, isLoading, isFetching, error } = useQuery('users', async () => {
     const response = await fetch('http://localhost:3001/api/users')
     const data = await response.json()
 
@@ -62,7 +62,11 @@ export default function UserList() {
 
         <Box flex="1"borderRadius={8} bg="gray.800" p={["4","8"]}> 
           <Flex mb="8" justify="space-between" align="center">
-            <Heading size="lg" fontWeight="normal">Usuários</Heading>
+            <Heading size="lg" fontWeight="normal">
+              Usuários
+
+              { !isLoading && isFetching  && <Spinner size="sm" color="grey.500" ml="4" /> }
+            </Heading>
 
             <Link href="/users/create" passHref>
               <Button
@@ -79,7 +83,7 @@ export default function UserList() {
 
           { isLoading ? (
             <Flex justify="center">
-              Carregando...
+             <Spinner size="sm" color="grey.500" ml="4" />
             </Flex>
           ) : error ? (
             <Text>Falha ao obter dados do usuários.</Text>

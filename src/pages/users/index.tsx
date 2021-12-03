@@ -81,8 +81,6 @@ export default function UserList() {
             </Link>
           </Flex>
 
-          OLA
-
           { isLoading ? (
             <Flex justify="center">
              <Spinner size="sm" color="grey.500" ml="4" />

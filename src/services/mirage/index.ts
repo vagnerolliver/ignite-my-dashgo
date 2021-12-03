@@ -1,4 +1,4 @@
-import { createServer, Model, Factory } from 'miragejs'
+import { createServer, Model, Factory, Response } from 'miragejs'
 import faker from 'faker'
 
 // definir o nome dos campos
@@ -17,7 +17,7 @@ export function makeServer() {
       // a momentos que se pode precisar do user
       // sem informar todos os campos.
       // os usarios salvos no mirage precisam conter o campos do User
-      users: Model.extend<Partial<User>>({})
+      user: Model.extend<Partial<User>>({})
     },
 
     // gerar dados em massa
@@ -46,7 +46,25 @@ export function makeServer() {
 
       // shorthands
       // rotas automatizadas
-      this.get('/users')
+      this.get('/users', function (schema, request) {
+        const { page = 1, per_page = 10 } = request.queryParams
+
+        const total = schema.all('user').length
+ 
+        // 10 ... 20 
+        const pageStart = (Number(page) -1) * Number(per_page);
+        const pageEnd = pageStart + Number(per_page)
+
+        const users = this.serialize(schema.all('user'))
+          .users.slice(pageStart, pageEnd)
+
+        return new Response(
+          200,
+          { 'x-total-count': String(total) },
+          { users }
+        )
+      })
+
       this.post('/users')
 
       this.namespace = ''

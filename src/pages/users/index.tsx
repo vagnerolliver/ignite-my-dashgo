@@ -1,12 +1,13 @@
 import { Box, Button, Checkbox, Flex, Heading, Icon, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue, Spinner } from "@chakra-ui/react"
 import { RiAddLine, RiPencilLine } from "react-icons/ri"
+import { useQuery } from 'react-query'
 import { useEffect } from 'react'
 import Link from "next/link"
-import { useQuery } from 'react-query'
 
 import { Sidebar } from "../../components/Layout/Sidebar/Index"
 import { Pagination } from "../../components/Pagination/Index"
 import { Header } from "../../components/Layout/Header/Index"
+import { api } from '../../services/api'
 
 type Users = {
   id: string
@@ -22,8 +23,7 @@ type Users = {
 export default function UserList() {
   // primeiro parametro é a chave usada no cache
   const { data, isLoading, isFetching, error } = useQuery('users', async () => {
-    const response = await fetch('http://localhost:3001/api/users')
-    const data = await response.json()
+    const { data } = await api.get('http://localhost:3001/api/users')
 
     const users: Users[] = data.users.map(user =>  {
       return {
@@ -80,6 +80,8 @@ export default function UserList() {
               </Button>
             </Link>
           </Flex>
+
+          OLA
 
           { isLoading ? (
             <Flex justify="center">

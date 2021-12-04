@@ -1,50 +1,21 @@
 import { Box, Button, Checkbox, Flex, Heading, Icon, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue, Spinner } from "@chakra-ui/react"
 import { RiAddLine, RiPencilLine } from "react-icons/ri"
-import { useQuery } from 'react-query'
-import { useEffect } from 'react'
+import { useState } from 'react'
 import Link from "next/link"
 
 import { Sidebar } from "../../components/Layout/Sidebar/Index"
 import { Pagination } from "../../components/Pagination/Index"
 import { Header } from "../../components/Layout/Header/Index"
-import { api } from '../../services/api'
+import { useUsers } from "../../services/hooks/useUsers"
 
-type Users = {
-  id: string
-  name: string
-  email: string
-  createdAt: string
-}
 
 // react query 
 // stale while revalidate
 // revalidade on focus
 
 export default function UserList() {
-  // primeiro parametro é a chave usada no cache
-  const { data, isLoading, isFetching, error } = useQuery('users', async () => {
-    const { data } = await api.get('http://localhost:3001/api/users')
-
-    const users: Users[] = data.users.map(user =>  {
-      return {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        createdAt: new Date(user.createdAt).toLocaleDateString('pt-BR', {
-          day: '2-digit',
-          month: 'long',
-          year: 'numeric'
-        })
-      }
-    })
-    
-    return users
-  }, {
-    // garante por 5 segundos que os dados estao frescos
-    // dado que eu "saio da aplicacao" e volto em 5 segundos o react-query 
-    // nao faz o refetch
-    staleTime: 1000 * 5 // 5 segundos
-  })
+  const [page, setPage] = useState(1)
+  const { data, isLoading, isFetching, error } = useUsers(page)
 
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -64,7 +35,7 @@ export default function UserList() {
           <Flex mb="8" justify="space-between" align="center">
             <Heading size="lg" fontWeight="normal">
               Usuários
-
+              
               { !isLoading && isFetching  && <Spinner size="sm" color="grey.500" ml="4" /> }
             </Heading>
 
@@ -101,7 +72,7 @@ export default function UserList() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  { data.map(user => (
+                  { data.users.map(user => (
                       <Tr key={user.id}>
                         <Td px={["4", "4", "6"]}>
                           <Checkbox colorScheme="pink" />
@@ -134,9 +105,9 @@ export default function UserList() {
               </Table>
 
               <Pagination  
-                totalCountOfRegisters={60}
-                currentPage={3}
-                onPageChange={() => {}}
+                totalCountOfRegisters={data.totalCount}
+                currentPage={page}
+                onPageChange={setPage}
               />
             </>
           )}

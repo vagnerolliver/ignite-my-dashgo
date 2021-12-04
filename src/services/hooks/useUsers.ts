@@ -9,8 +9,19 @@ type Users = {
   createdAt: string
 }
 
-async function getUsers(): Promise<Users[]> {
-  const { data } = await api.get('http://localhost:3001/api/users')
+type GetUsersResponse = {
+  totalCount: number,
+  users: Users[]
+}
+
+async function getUsers(page: number): Promise<GetUsersResponse> {
+  const { data, headers } = await api.get('users', { 
+    params: { 
+      page
+    }
+  })
+
+  const totalCount = Number(headers['x-total-count'])
 
   const users = data.users.map(user =>  {
     return {
@@ -25,12 +36,12 @@ async function getUsers(): Promise<Users[]> {
     }
   })
   
-  return users
+  return { users, totalCount }
 }
 
-export function useUsers() {
+export function useUsers(page: number) {
   // primeiro parametro é a chave usada no cache
-  return useQuery('users', getUsers , {
+  return useQuery(['users', page], () => getUsers(page) , {
     // garante por 5 segundos que os dados estao frescos
     // dado que eu "saio da aplicacao" e volto em 5 segundos o react-query 
     // nao faz o refetch

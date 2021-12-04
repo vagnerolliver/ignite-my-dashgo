@@ -41,7 +41,6 @@ export function Pagination({
     ? generatePagesArray(currentPage, Math.min(currentPage + siblingsCount, lastPage))
     : []
 
-  console.log(lastPage)
   return(
     <HStack justify="space-between" mt="8">
       <Box>
@@ -51,7 +50,7 @@ export function Pagination({
  
         {currentPage > (1 + siblingsCount) && (
           <>
-            <PaginationItem page={1} /> 
+            <PaginationItem onPageChange={onPageChange} page={1} /> 
             {currentPage > (2 + siblingsCount) && (
               <Text color="gray.300" w="8" textAlign="center">...</Text>
             )}
@@ -59,13 +58,13 @@ export function Pagination({
         )}
  
         {previousPages.length > 0 && previousPages.map(page => {
-          return <PaginationItem  key={page} page={page} /> 
+          return <PaginationItem  onPageChange={onPageChange} key={page} page={page} /> 
         })}  
 
-        <PaginationItem isCurrent page={currentPage} /> 
+        <PaginationItem onPageChange={onPageChange} isCurrent page={currentPage} /> 
         
         {nextPages.length > 0 && nextPages.map(page => {
-          return <PaginationItem  key={page} page={page} /> 
+          return <PaginationItem onPageChange={onPageChange} key={page} page={page} /> 
         })}
 
         {/* verificar se as siblings page já estão cobrindo a lastPage */}
@@ -74,7 +73,7 @@ export function Pagination({
             {(currentPage + 1 + siblingsCount) < lastPage && (
               <Text color="gray.300" w="8" textAlign="center">...</Text>
             )}
-            <PaginationItem page={lastPage} /> 
+            <PaginationItem onPageChange={onPageChange} page={lastPage} /> 
            </>
         )}
       

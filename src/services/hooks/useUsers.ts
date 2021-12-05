@@ -28,7 +28,7 @@ async function getUsers(page: number): Promise<GetUsersResponse> {
       id: user.id,
       name: user.name,
       email: user.email,
-      createdAt: new Date(user.createdAt).toLocaleDateString('pt-BR', {
+      createdAt: new Date(user.created_at).toLocaleDateString('pt-BR', {
         day: '2-digit',
         month: 'long',
         year: 'numeric'
@@ -45,6 +45,7 @@ export function useUsers(page: number) {
     // garante por 5 segundos que os dados estao frescos
     // dado que eu "saio da aplicacao" e volto em 5 segundos o react-query 
     // nao faz o refetch
-    staleTime: 1000 * 5 // 5 segundos
+    // staleTime: 1000 * 5 // 5 segundos
+    staleTime: 1000 * 60 * 10
   })
 }

@@ -1,4 +1,4 @@
-import { createServer, Model, Factory, Response } from 'miragejs'
+import { createServer, Model, Factory, Response, ActiveModelSerializer } from 'miragejs'
 import faker from 'faker'
 
 // definir o nome dos campos
@@ -12,6 +12,10 @@ type User = {
 
 export function makeServer() {
   const server = createServer({
+    serializers: {
+      application: ActiveModelSerializer
+    },
+
     models: {
       // Porque usar o Partial? 
       // a momentos que se pode precisar do user
@@ -37,7 +41,7 @@ export function makeServer() {
 
     // criar os dados assim que o server inicializar
     seeds(server) {
-      server.createList('user', 200)
+      server.createList('user', 5)
     },
 
     routes() {
